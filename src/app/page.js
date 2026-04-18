@@ -138,7 +138,7 @@ const products = [
     {
   id: 104,
   name: "Lavender Lemon Bundle",
-  price: 28,
+  price: 8,
   description:
     "Lavender Lemon soap bundle crafted to relax, refresh, and nourish your skin.",
   image: "/Images/lavender-lemon-bundle.png",
@@ -215,7 +215,7 @@ const reviews = [
       " J'apprécie la clarté et la simplicité du site, notamment sur mobile."
   },
   {
-    name: "Chantal",
+    name: "Chantal Menard ",
     quote:
       "The products feel handcrafted and the bundle ideas make great gifts.",
   },
@@ -224,7 +224,10 @@ const reviews = [
 export default function OshunyLuxuryHomepage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedProduct, setSelectedProduct] = useState(null);
+ const [selectedProduct, setSelectedProduct] = useState(null);
+const [orderProduct, setOrderProduct] = useState(null);
+const [orderSubmitted, setOrderSubmitted] = useState(false);
+const [orderLoading, setOrderLoading] = useState(false);
 
   const categories = useMemo(
     () => ["All", "Hair", "Face", "Soap Bars", "Soothing Care"],
@@ -235,7 +238,34 @@ export default function OshunyLuxuryHomepage() {
     if (selectedCategory === "All") return products;
     return products.filter((product) => product.category === selectedCategory);
   }, [selectedCategory]);
+const handleOrderSubmit = async (e) => {
+  e.preventDefault();
+  setOrderLoading(true);
 
+  const form = e.target;
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch("https://formspree.io/f/xdaygpar", {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (response.ok) {
+      setOrderSubmitted(true);
+      form.reset();
+    } else {
+      alert("There was a problem sending your order. Please try again.");
+    }
+  } catch (error) {
+    alert("There was a problem sending your order. Please try again.");
+  }
+
+  setOrderLoading(false);
+};
   return (
     <div className="min-h-screen bg-[#f7f1ea] text-[#1f1b18]">
       <header className="sticky top-0 z-50 border-b border-[#decfc3] bg-[#f7f1ea]/95 backdrop-blur">
@@ -412,14 +442,17 @@ export default function OshunyLuxuryHomepage() {
                 <div className="mt-5 text-2xl font-semibold">
                   C${bundle.price.toFixed(2)}
                 </div>
-                <a
-                  href={bundle.paypalLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-5 inline-block rounded-full bg-[#ab2f52] px-5 py-3 text-sm font-semibold text-white"
-                >
-                  Buy Bundle
-                </a>
+              <button
+  onClick={() => {
+    setOrderProduct(bundle);
+    setOrderSubmitted(false);
+  }}
+  className="mt-5 inline-block rounded-full bg-[#ab2f52] px-5 py-3 text-sm font-semibold text-white"
+>
+  Order Bundle
+</button>
+
+
               </div>
             ))}
           </div>
@@ -490,16 +523,30 @@ export default function OshunyLuxuryHomepage() {
                   {product.description}
                 </p>
 
-                <div className="mt-5 flex items-center justify-between gap-3">
-                  <div className="text-2xl font-semibold">
-                    C${product.price.toFixed(2)}
-                  </div>
-                  <button
-                    onClick={() => setSelectedProduct(product)}
-                    className="rounded-full border border-[#1d241d] px-4 py-2 text-sm font-semibold transition hover:bg-[#143d28] hover:text-white"
-                  >
-                    View / Buy
-                  </button>
+               <div className="mt-5 flex items-center justify-between gap-3">
+  <div className="text-2xl font-semibold">
+    C${product.price.toFixed(2)}
+  </div>
+
+  <div className="flex gap-2">
+    <button
+      onClick={() => setSelectedProduct(product)}
+      className="rounded-full border border-[#1d241d] px-4 py-2 text-sm font-semibold transition hover:bg-[#143d28] hover:text-white"
+    >
+      View
+    </button>
+
+    <button
+      onClick={() => {
+        setOrderProduct(product);
+        setOrderSubmitted(false);
+      }}
+      className="rounded-full bg-[#ab2f52] px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+    >
+      Order
+    </button>
+  </div>
+
                 </div>
               </div>
             </div>
@@ -559,7 +606,7 @@ export default function OshunyLuxuryHomepage() {
           Email
         </div>
         <div className="mt-1 text-lg font-semibold">
-          info@oshunybeauty.com
+          oshunybeauty@gmail.com
         </div>
       </div>
       <div>
@@ -642,18 +689,263 @@ export default function OshunyLuxuryHomepage() {
                 </p>
               </div>
 
-              <a
-                href={selectedProduct.paypalLink}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-6 inline-block rounded-full bg-[#143d28] px-6 py-3 font-semibold text-white"
-              >
-                Buy with PayPal
-              </a>
+            <button
+  onClick={() => {
+    setOrderProduct(selectedProduct);
+    setOrderSubmitted(false);
+    setSelectedProduct(null);
+  }}
+  className="mt-6 inline-block rounded-full bg-[#143d28] px-6 py-3 font-semibold text-white"
+>
+  Order with Shipping
+</button>
             </div>
           </div>
         </div>
+           )}
+
+      {orderProduct && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-2xl rounded-[32px] bg-white p-6 shadow-2xl md:p-8">
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm uppercase tracking-[0.3em] text-[#8d7868]">
+                  Order request
+                </p>
+                <h3 className="mt-2 text-3xl font-semibold leading-tight">
+                  {orderProduct.name}
+                </h3>
+                <p className="mt-2 text-sm text-[#5b524c]">
+                  Fill out your shipping details, submit your order, then complete payment with PayPal.
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  setOrderProduct(null);
+                  setOrderSubmitted(false);
+                }}
+                className="rounded-full border p-2"
+                type="button"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {!orderSubmitted ? (
+              <form onSubmit={handleOrderSubmit} className="grid gap-4 md:grid-cols-2">
+                <input type="hidden" name="product" value={orderProduct.name} />
+                <input type="hidden" name="price" value={`C$${orderProduct.price.toFixed(2)}`} />
+
+                <div className="md:col-span-2">
+                  <label className="mb-1 block text-sm font-semibold">Product</label>
+                  <input
+                    type="text"
+                    value={orderProduct.name}
+                    readOnly
+                    className="w-full rounded-xl border border-[#d8ccc1] bg-[#f8f1ea] px-4 py-3 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-semibold">Full Name</label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    required
+                    className="w-full rounded-xl border border-[#d8ccc1] px-4 py-3 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-semibold">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    className="w-full rounded-xl border border-[#d8ccc1] px-4 py-3 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-semibold">Phone</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    className="w-full rounded-xl border border-[#d8ccc1] px-4 py-3 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-semibold">Quantity</label>
+                  <input
+                    type="number"
+                    name="quantity"
+                    min="1"
+                    defaultValue="1"
+                    required
+                    className="w-full rounded-xl border border-[#d8ccc1] px-4 py-3 outline-none"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="mb-1 block text-sm font-semibold">Street Address</label>
+                  <input
+                    type="text"
+                    name="streetAddress"
+                    required
+                    className="w-full rounded-xl border border-[#d8ccc1] px-4 py-3 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-semibold">City</label>
+                  <input
+                    type="text"
+                    name="city"
+                    required
+                    className="w-full rounded-xl border border-[#d8ccc1] px-4 py-3 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-semibold">Province / State</label>
+                  <input
+                    type="text"
+                    name="province"
+                    required
+                    className="w-full rounded-xl border border-[#d8ccc1] px-4 py-3 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-semibold">Postal / ZIP Code</label>
+                  <input
+                    type="text"
+                    name="postalCode"
+                    required
+                    className="w-full rounded-xl border border-[#d8ccc1] px-4 py-3 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-semibold">Country</label>
+                  <input
+                    type="text"
+                    name="country"
+                    required
+                    className="w-full rounded-xl border border-[#d8ccc1] px-4 py-3 outline-none"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="mb-1 block text-sm font-semibold">Notes</label>
+                  <textarea
+                    name="notes"
+                    rows="4"
+                    className="w-full rounded-xl border border-[#d8ccc1] px-4 py-3 outline-none"
+                    placeholder="Any delivery notes or special request"
+                  />
+                </div>
+
+                <div className="md:col-span-2 flex flex-wrap gap-3 pt-2">
+                  <button
+                    type="submit"
+                    disabled={orderLoading}
+                    className="rounded-full bg-[#143d28] px-6 py-3 font-semibold text-white disabled:opacity-60"
+                  >
+                    {orderLoading ? "Sending..." : "Submit Order"}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOrderProduct(null);
+                      setOrderSubmitted(false);
+                    }}
+                    className="rounded-full border border-[#1d241d] px-6 py-3 font-semibold"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="rounded-[24px] bg-[#f8f1ea] p-6">
+                <h4 className="text-2xl font-semibold">Order submitted successfully</h4>
+                <p className="mt-3 text-base leading-7 text-[#5b524c]">
+                  Thank you. Your shipping details were sent successfully. Please complete your payment using PayPal below. Once payment is received, your order will be prepared for shipping.
+                </p>
+
+                <div className="mt-5 rounded-[20px] border border-[#e3d6cb] bg-white p-5">
+                  <p className="text-sm uppercase tracking-[0.2em] text-[#8d7868]">
+                    Product
+                  </p>
+                  <p className="mt-1 text-lg font-semibold">{orderProduct.name}</p>
+                  <p className="mt-3 text-sm uppercase tracking-[0.2em] text-[#8d7868]">
+                    Price
+                  </p>
+                  <p className="mt-1 text-lg font-semibold">
+                    C${orderProduct.price.toFixed(2)}
+                  </p>
+                </div>
+
+             <div className="mt-6 space-y-5">
+
+  <p className="text-sm text-[#5b524c]">
+    Choose your payment method below to complete your order:
+  </p>
+
+  {/* 🔴 PAYPAL OPTION */}
+  <div className="rounded-2xl border p-4">
+    <p className="font-semibold mb-2">Pay with PayPal</p>
+
+    <a
+      href="https://www.paypal.com/paypalme/oshunybeauty"
+      target="_blank"
+      rel="noreferrer"
+      className="inline-block rounded-full bg-[#ab2f52] px-6 py-3 font-semibold text-white"
+    >
+      Pay with PayPal
+    </a>
+
+    <p className="mt-2 text-xs text-[#8d7868]">
+      You will be redirected to PayPal to complete your payment.
+    </p>
+  </div>
+
+  {/* 🟢 E-TRANSFER OPTION */}
+  <div className="rounded-2xl border p-4">
+    <p className="font-semibold mb-2">Pay by E-Transfer</p>
+
+    <p className="text-lg font-semibold text-[#143d28]">
+      oshunybeauty@gmail.com
+    </p>
+
+    <p className="mt-2 text-xs text-[#8d7868]">
+      Send your e-transfer and include your name + product in the message.
+    </p>
+  </div>
+
+</div>
+
+                <div className="mt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOrderProduct(null);
+                      setOrderSubmitted(false);
+                    }}
+                    className="rounded-full border border-[#1d241d] px-6 py-3 font-semibold"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       )}
+
     </div>
   );
 }
