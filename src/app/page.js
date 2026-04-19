@@ -613,7 +613,7 @@ const handleOrderSubmit = async (e) => {
         <div className="text-sm uppercase tracking-widest text-[#8d7868]">
           Instagram
         </div>
-        <div className="mt-1 text-lg font-semibold">@oshunybeauty</div>
+        <div className="mt-1 text-lg font-semibold">@oshunycanadainc</div>
       </div>
       <div>
         <div className="text-sm uppercase tracking-widest text-[#8d7868]">
