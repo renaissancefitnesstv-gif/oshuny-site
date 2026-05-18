@@ -18,7 +18,7 @@ const products = [
   {
   id: 204,
   name: "Mango Soap",
-  price: 8,
+  price: 12,
   category: "Soap Bars",
   tag: "Brightening",
   image: "/Images/mango-soap-card.png",
@@ -36,7 +36,7 @@ const products = [
 {
   id: 205,
   name: "ChokeBerry Soap",
-  price: 8,
+  price: 12,
   category: "Soap Bars",
   tag: "Protect",
   image: "/Images/chokeberry-soap-card.png",
@@ -54,7 +54,7 @@ const products = [
 {
   id: 206,
   name: "Moringa Soap",
-  price: 8,
+  price: 12,
   category: "Soap Bars",
   tag: "Revitalize",
   image: "/Images/moringa-soap-card.png",
@@ -83,7 +83,7 @@ const products = [
 {
   id: 201,
   name: "Lavender Soap 3-Pack",
-  price: 36,
+  price: 45,
   category: "Bundles",
   tag: "Relax",
   image: "/Images/lavender-3-pack.png",
@@ -107,7 +107,7 @@ const products = [
 {
   id: 203,
   name: "Charcoal Detox Set",
-  price: 8,
+  price: 10,
   category: "Bundles",
   tag: "Detox",
   image: "/Images/charcoal-set.png",
@@ -118,7 +118,7 @@ const products = [
   {
   id: 103,
   name: "Turmeric Brightening Bundle",
-  price: 8,
+  price: 12,
   category: "Bundles",
   tag: "Brightening",
   image: "/Images/tumeric-soap.png",
@@ -138,7 +138,7 @@ const products = [
     {
   id: 104,
   name: "Lavender Lemon Bundle",
-  price: 8,
+  price: 12,
   description:
     "Lavender Lemon soap bundle crafted to relax, refresh, and nourish your skin.",
   image: "/Images/lavender-lemon-bundle.png",
@@ -161,7 +161,7 @@ const bundles = [
    
     id: 101,
     name: "Glow Trio",
-    price: 24,
+    price: 30,
     description: "10-Carrot Facial Soap + Mango Soap + Sulochna Soap",
     image: "/Images/glow-trio.jpeg",
     bullets: [
@@ -174,7 +174,7 @@ const bundles = [
   {
     id: 102,
     name: "Soothing Skin Bundle",
-    price: 32,
+    price: 36,
     description:
       "Winter Green + Coffee Fusion + Charcoal + Mango soaps selected for a soothing cleansing routine.",
     image: "/Images/soothing-skin-bundle.png",
@@ -189,7 +189,7 @@ const bundles = [
   {
     id: 105,
     name: "Skin Relief Bundle",
-    price: 32,
+    price: 30,
     description:
       "Winter Green + Coffee Fusion + Charcoal soaps selected for a soothing cleansing routine.",
     image: "/Images/skin-relief-bundle.png",
